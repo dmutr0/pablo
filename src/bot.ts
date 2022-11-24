@@ -7,6 +7,8 @@ export class Bot {
 	private bot: Telegraf;
 	private app: App;
 	private readonly logger: ILogger;
+	private charsLimit: number = Number(process.env.LIMIT) || 100;
+	private isEmptyPrint: boolean = false;
 	constructor(logger: ILogger) {
 		this.bot = new Telegraf(process.env.TOKEN!);
 		this.app = new App(logger);
@@ -22,12 +24,29 @@ export class Bot {
 		});
 
 		this.bot.command("print", (ctx) => {
-			this.app.addString(ctx.message.text.split(" ").slice(1).join(" "));
+			const str = ctx.message.text.split(" ").slice(1).join(" ");
+			if (str.length > this.charsLimit) {
+				this.logger.warn("Failed to send string");
+				return ctx.reply(`String length must be less than ${this.charsLimit} symbols`);
+			}
+
+			if (str.length < 1) {
+				this.isEmptyPrint = true;
+				return ctx.reply("Send me a string or commad second time with your input");
+			}
+			this.app.addString(str);
 		});
 
 		this.bot.hears(/.*/, (ctx) => {
-			this.logger.info(`Got message ${magentaBright(ctx.message.text)} from ${redBright(ctx.message.from.first_name)}`);
-			ctx.reply("mama...");
+			if (this.isEmptyPrint) {
+				const str = ctx.message.text;
+				this.isEmptyPrint = false;
+				if (str.length > this.charsLimit) {
+					this.logger.warn("Failed to send string");
+					return ctx.reply(`String length must be less than ${this.charsLimit} symbols`);
+				}
+				this.app.addString(str);
+			}
 		});
 
 	this.app.init();
