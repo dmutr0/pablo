@@ -59,8 +59,11 @@ export class Bot {
 					return ctx.reply(`String length must be less than ${this.charsLimit} symbols`);
 				}
 				this.addMessage(ctx.message);
-				this.app.addString(str);
+				return this.app.addString(str);
 			}
+			this.logger.debug(new Date());
+			
+			
 		});
 
 	this.app.init();

@@ -9,7 +9,6 @@ async function bootstrap() {
     const logger = new LoggerService();
     const database = new DatabaseService(logger);
     const bot = new Bot(logger, database);
-
     bot.init();
 }
 

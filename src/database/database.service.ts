@@ -1,4 +1,4 @@
-import { blackBright, greenBright, magentaBright, redBright } from "cli-color";
+import { blackBright, magentaBright, redBright } from "cli-color";
 import { Client } from "pg";
 import { IMessage } from "../common/message.interface";
 import { ILogger } from "../logger/logger.interface";
@@ -13,11 +13,10 @@ export class DatabaseService {
             .connect()
             .then(() => this.logger.info(blackBright("[Database]"), "Connected to db"))
             .catch((e) => this.logger.error(e));
-       
     }
 
     async addMessage(msg: IMessage) {
-        await this.client.query("INSERT INTO messages (username, message) VALUES ($1, $2)", [msg.username,msg.message]);
+        await this.client.query("INSERT INTO messages (username, message) VALUES ($1, $2)", [msg.username, msg.message]);
         this.logger.info(blackBright("[Database]"), `Created message ${magentaBright(msg.message)} from user ${redBright(msg.username)}`);
     }
 

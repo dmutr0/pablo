@@ -31,18 +31,12 @@ export class App {
 
 		this.app.get("/getstring", async (req: Request, res: Response, next: NextFunction) => {
 			if (this.textArray.length > 0) {
-				res.send(this.textArray.shift());
+				const msg = this.textArray.shift()!.replaceAll("ї", "ж").replaceAll("ґ", "ж").replaceAll("є", "ж");
+				res.send(msg);
 			} else {
 				res.send("");
 			}
 		});
-
-		// this.app.get("/messages/:id", async (req: Request, res: Response, next: NextFunction) => {
-		// 	// const message = await this.prisma.getMessage(Number(req.params.id));
-		// 	this.logger.info(`Got message from db ${magentaBright(message?.message)} from ${red(message?.username)}`);
-			
-		// 	res.send(message);
-		// })
 
 		this.app.get("/messages", async (req: Request, res: Response, next: NextFunction) => {
 			try {
