@@ -1,4 +1,4 @@
-import { bold } from "cli-color";
+import { bold, greenBright } from "cli-color";
 import { Logger } from "tslog";
 import { ILogger } from "./logger.interface";
 
@@ -14,7 +14,11 @@ export class LoggerService implements ILogger {
         ) {}
 
     info(...args: any): void {
-        this.logger.info(bold(...args));
+        this.logger.info(bold(greenBright(...args)));
+    }
+
+    debug(...args: any): void {
+        this.logger.debug(bold(...args));
     }
 
     warn(...args: any): void {
