@@ -21,6 +21,7 @@ export class AuthService {
 			return;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return { mail: args.shift()!, pass: args.shift()! };
 	}
 

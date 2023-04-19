@@ -8,6 +8,7 @@ import { WSS } from "./wss/wss";
 import { DatabaseService } from "./database/database.service";
 import { AuthService } from "./auth/auth.service";
 import { MailService } from "./mail/mail.service";
+import { Queue } from "./queue/queue.service";
 
 const container = new Container();
 
@@ -16,6 +17,7 @@ container.bind<IWSS>(TYPES.WSS).to(WSS).inSingletonScope();
 container.bind<DatabaseService>(TYPES.Database).to(DatabaseService).inSingletonScope();
 container.bind<MailService>(TYPES.Mail).to(MailService).inSingletonScope();
 container.bind<AuthService>(TYPES.Auth).to(AuthService).inSingletonScope();
+container.bind<Queue>(TYPES.Queue).to(Queue).inSingletonScope();
 container.bind<ILogger>(TYPES.Logger).to(Logger).inSingletonScope();
 
 export { container };

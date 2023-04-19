@@ -10,6 +10,7 @@ import { Message, Update } from "telegraf/typings/core/types/typegram";
 import { DatabaseService } from "./database/database.service";
 import { AuthService } from "./auth/auth.service";
 import { MailService } from "./mail/mail.service";
+import { Queue } from "./queue/queue.service";
 
 type Context = NarrowedContext<
   Ctx<Update>,
@@ -34,7 +35,8 @@ export class Bot {
     @inject(TYPES.WSS) private readonly wss: IWSS,
 	@inject(TYPES.Auth) private readonly auth: AuthService,
 	@inject(TYPES.Mail) private readonly mail: MailService,
-    @inject(TYPES.Database) private readonly database: DatabaseService
+    @inject(TYPES.Database) private readonly database: DatabaseService,
+	@inject(TYPES.Queue) private readonly queue: Queue,
 	) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.bot = new Telegraf(process.env.TOKEN!);
@@ -92,7 +94,8 @@ export class Bot {
 			return;
 		}
 
-		this.database.addMessage({ message, email: "fedwsf" });
+		this.database.addMessage({ message, email: user.email });
+		this.queue.add(message);
 		ctx.reply("Ваше повідомлення було додано в чергу: " + message);
 	}
 
